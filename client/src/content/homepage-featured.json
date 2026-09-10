@@ -1,0 +1,11 @@
+{
+  "variant": "grid",
+  "appearance": { "textSize": "text-2xl", "spacing": "py-20", "alignment": "text-left", "background": "bg-background", "textColor": "text-foreground", "visible": true },
+  "heading": "New in",
+  "lead": "The most recent additions, newest first.",
+  "action": {
+    "label": "See everything",
+    "to": "/products"
+  },
+  "emptyMessage": "Nothing is on the shelves yet."
+}

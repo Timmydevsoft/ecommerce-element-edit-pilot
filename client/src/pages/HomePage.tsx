@@ -3,54 +3,63 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatMoneyCompact } from "@/components/price-display";
-import { appConfig, routes, siteChrome } from "@/config/app-config";
+import { appConfig, routes } from "@/config/app-config";
+import hero from "@/content/homepage-hero.json";
+import categoriesContent from "@/content/homepage-categories.json";
+import featuredContent from "@/content/homepage-featured.json";
 import { categoriesApi, productsApi } from "@/api/catalogue";
 import { useAsync } from "@/hooks/use-async";
 import { FeaturedProductCard } from "@/features/home/FeaturedProductCard";
 import { HeroCollage } from "@/features/home/HeroCollage";
+import { cn } from "@/lib/utils";
+import { sectionAppearance } from "@/lib/section-appearance";
 
 /**
  * The landing page.
  *
- * Every string here comes from `site-content.json` via `siteChrome.home`, and
- * the delivery threshold is read from `appConfig` rather than typed into the
- * copy — a number written twice is a number that eventually disagrees with
- * itself and tells a customer something untrue.
+ * Each major section owns a small JSON document. The editor can therefore
+ * rewrite copy or pick a declared layout without asking a model to rewrite
+ * this component. Runtime facts such as the delivery threshold still come
+ * from `appConfig`, so they cannot drift from the server's behaviour.
  */
 export default function HomePage() {
   const { data: featured, loading } = useAsync(() => productsApi.featured(), []);
   const { data: categories } = useAsync(() => categoriesApi.list(), []);
-  const home = siteChrome.home;
-
   return (
     <>
-      <section data-builder-id="homepage.hero" className="border-b">
-        <div className="container grid gap-12 py-14 lg:grid-cols-12 lg:gap-16 lg:py-24">
-          <div className="lg:col-span-6 lg:self-center">
+      <section data-builder-id="homepage.hero" data-section="homepage.hero" className={cn("border-b", sectionAppearance(hero.appearance).root)}>
+        <div className={cn(
+          "container grid gap-12 py-14 lg:gap-16 lg:py-24",
+          hero.variant === "centered" ? "text-center" : "lg:grid-cols-12",
+        )}>
+          <div className={cn(
+            "lg:self-center",
+            hero.variant === "centered" ? "mx-auto max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-7" : "lg:col-span-6",
+          )}>
             <p className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
-              {home.eyebrow}
+              {hero.eyebrow}
             </p>
 
-            <h1 className="mt-5 max-w-xl text-4xl leading-[1.06] font-medium tracking-tight text-balance sm:text-5xl lg:text-[3.4rem]">
-              {home.headline}
+            <h1 className={cn("mt-5 max-w-xl text-4xl leading-[1.06] font-medium tracking-tight text-balance sm:text-5xl lg:text-[3.4rem]", sectionAppearance(hero.appearance).heading)}>
+              {hero.headline}
             </h1>
 
             <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
               {appConfig.description}
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className={cn("mt-9 flex flex-wrap gap-3", hero.variant === "centered" && "justify-center")}>
               <Button asChild size="lg" className="rounded-sm px-6">
-                <Link to={routes.products}>{home.primaryAction}</Link>
+                <Link to={hero.primaryAction.to}>{hero.primaryAction.label}</Link>
               </Button>
               <Button asChild size="lg" variant="ghost" className="rounded-sm px-6">
-                <Link to={routes.lookup}>{home.secondaryAction}</Link>
+                <Link to={hero.secondaryAction.to}>{hero.secondaryAction.label}</Link>
               </Button>
             </div>
 
             {/* Reassurance as a quiet strip rather than a row of icon cards. */}
             <dl className="mt-12 grid gap-x-8 gap-y-5 border-t pt-8 sm:grid-cols-3">
-              {home.assurances.map((item) => (
+              {hero.assurances.map((item) => (
                 <div key={item.id}>
                   <dt className="text-sm font-medium">{item.title}</dt>
                   <dd className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
@@ -61,7 +70,9 @@ export default function HomePage() {
             </dl>
           </div>
 
-          <div className="lg:col-span-6">
+          <div className={cn(
+            hero.variant === "centered" ? "mx-auto w-full max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-5" : "lg:col-span-6",
+          )}>
             {loading ? (
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <Skeleton className="mt-8 aspect-[4/5] rounded-sm sm:mt-14" />
@@ -75,9 +86,12 @@ export default function HomePage() {
       </section>
 
       {categories && categories.length > 0 && (
-        <section className="container py-16 lg:py-20">
-          <SectionHeading title={home.categoriesHeading} lead={home.categoriesLead} />
-          <div className="mt-8 grid gap-px overflow-hidden rounded-sm border sm:grid-cols-2 lg:grid-cols-4">
+        <section data-section="homepage.categories" className={cn("container py-16 lg:py-20", sectionAppearance(categoriesContent.appearance).root)}>
+          <SectionHeading title={categoriesContent.heading} lead={categoriesContent.lead} headingClassName={sectionAppearance(categoriesContent.appearance).heading} />
+          <div className={cn(
+            "mt-8 grid gap-px overflow-hidden rounded-sm border sm:grid-cols-2",
+            categoriesContent.variant === "list" ? "lg:grid-cols-2" : categoriesContent.variant === "compact" ? "lg:grid-cols-3" : "lg:grid-cols-4",
+          )}>
             {categories.map((category) => (
               <Link
                 key={category.id}
@@ -99,20 +113,24 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="container pb-20 lg:pb-28">
+      <section data-section="homepage.featured" className={cn("container pb-20 lg:pb-28", sectionAppearance(featuredContent.appearance).root)}>
         <SectionHeading
-          title={home.featuredHeading}
-          lead={home.featuredLead}
+          title={featuredContent.heading}
+          lead={featuredContent.lead}
+          headingClassName={sectionAppearance(featuredContent.appearance).heading}
           action={
             <Button asChild variant="link" className="h-auto p-0">
-              <Link to={routes.products}>
-                {home.featuredAction} <ArrowRight className="size-4" />
+              <Link to={featuredContent.action.to}>
+                {featuredContent.action.label} <ArrowRight className="size-4" />
               </Link>
             </Button>
           }
         />
 
-        <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className={cn(
+          "mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2",
+          featuredContent.variant === "list" ? "lg:grid-cols-2" : featuredContent.variant === "spotlight" ? "lg:grid-cols-3" : "lg:grid-cols-4",
+        )}>
           {loading
             ? [0, 1, 2, 3].map((key) => <Skeleton key={key} className="h-72 rounded-sm" />)
             : featured?.map((product) => <FeaturedProductCard key={product.id} product={product} />)}
@@ -120,7 +138,7 @@ export default function HomePage() {
 
         {!loading && featured?.length === 0 && (
           <p className="text-muted-foreground border-t pt-8 text-sm">
-            Nothing is on the shelves yet.
+            {featuredContent.emptyMessage}
           </p>
         )}
       </section>
@@ -133,15 +151,17 @@ function SectionHeading({
   title,
   lead,
   action,
+  headingClassName,
 }: {
   title: string;
   lead?: string;
   action?: React.ReactNode;
+  headingClassName?: string;
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">
       <div>
-        <h2 className="text-xl font-medium tracking-tight sm:text-2xl">{title}</h2>
+        <h2 className={cn("text-xl font-medium tracking-tight sm:text-2xl", headingClassName)}>{title}</h2>
         {lead && <p className="text-muted-foreground mt-1.5 text-sm">{lead}</p>}
       </div>
       {action}

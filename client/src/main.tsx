@@ -7,11 +7,13 @@ import { appConfig } from "@/config/app-config";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
 import { AppRouter } from "@/router";
+import { installAnnotationBridge } from "@/lib/annotation-bridge";
 import "./index.css";
 
 // index.html ships the template's own title. The generated brand owns it at
 // runtime, so a rebranded shop does not keep the template name in the tab.
 document.title = appConfig.name;
+installAnnotationBridge();
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Missing #root element in index.html");

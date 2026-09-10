@@ -326,7 +326,7 @@ honest; the other twenty-nine COMPONENT surfaces all carry a verified
 pages. Putting them in the protected `hooks/` directory keeps the rule intact —
 shared logic protected, per-page presentation editable.
 
-**The landing page was rebuilt, and its copy moved into configuration.**
+**The landing page was rebuilt, and its copy is section-owned.**
 The first version was the default shadcn arrangement — centred gradient hero,
 badge above the headline, one accent-coloured word, a row of three
 icon-in-a-rounded-square cards. Competent, and identical to every other
@@ -338,11 +338,12 @@ three-column strip under a hairline rule rather than as icon cards, and
 departments as bordered typographic tiles. Section headings share one rhythm —
 left aligned, hairline rule, action on the right.
 
-Its wording moved to `site-content.json` under `home`, exposed as the
-`home.copy` CONFIG surface, so headline, eyebrow, button labels, reassurances
-and section headings are all deterministic edits with no model involved. The
-first version had them hard-coded in the JSX — the same fault this project found
-in `hotel-booking-two`, repeated.
+Its wording lives in three files under `client/src/content`, exposed as SECTION
+surfaces for the hero, departments and featured products. Their fields are
+bounded, link targets are non-generative, and each carries three template-owned
+layout variants. Copy regeneration therefore writes validated JSON rather than
+JSX, while a layout change only replaces the section's `variant` value. The
+shared `site-content.json` is reserved for header, footer and dashboard chrome.
 
 **The free-delivery threshold is single-sourced.** The old copy read "Free
 delivery over £50" as a literal while `appConfig.freeDeliveryOver` held the real

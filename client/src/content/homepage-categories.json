@@ -1,0 +1,6 @@
+{
+  "variant": "cards",
+  "appearance": { "textSize": "text-2xl", "spacing": "py-16", "alignment": "text-left", "background": "bg-background", "textColor": "text-foreground", "visible": true },
+  "heading": "Departments",
+  "lead": "Four shelves, stocked slowly."
+}

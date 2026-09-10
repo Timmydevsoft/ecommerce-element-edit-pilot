@@ -10,34 +10,6 @@
     "dashboard": "Dashboard",
     "cartLabel": "Basket"
   },
-  "home": {
-    "eyebrow": "Independent general store",
-    "headline": "Things worth keeping, priced without theatre",
-    "primaryAction": "Shop everything",
-    "secondaryAction": "Track an order",
-    "assurances": [
-      {
-        "id": "payment",
-        "title": "Pay at the door",
-        "text": "Cash when it arrives. Nothing is charged online, and there is no card to enter."
-      },
-      {
-        "id": "delivery",
-        "title": "Free delivery",
-        "text": "Orders over {amount} arrive free. Below that, a flat fee shown before you confirm."
-      },
-      {
-        "id": "stock",
-        "title": "Real stock counts",
-        "text": "What you see is what is on the shelf. If it is running low, we say how low."
-      }
-    ],
-    "categoriesHeading": "Departments",
-    "categoriesLead": "Four shelves, stocked slowly.",
-    "featuredHeading": "New in",
-    "featuredLead": "The most recent additions, newest first.",
-    "featuredAction": "See everything"
-  },
   "footer": {
     "note": "Cash on delivery. No card needed.",
     "links": [

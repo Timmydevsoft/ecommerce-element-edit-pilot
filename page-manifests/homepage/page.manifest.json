@@ -12,15 +12,21 @@
   ],
   "componentDependencies": [
     "client/src/features/home/FeaturedProductCard.tsx",
-    "client/src/features/home/HeroCollage.tsx"
+    "client/src/features/home/HeroCollage.tsx",
+    "client/src/content/homepage-hero.json",
+    "client/src/content/homepage-categories.json",
+    "client/src/content/homepage-featured.json"
   ],
   "editableSections": [
     "homepage.hero",
+    "homepage.categories",
+    "homepage.featured",
     "homepage.featured-card",
     "homepage.collage"
   ],
   "allowedOperations": [
     "UPDATE_CONTENT",
+    "REGENERATE_CONTENT",
     "UPDATE_DESIGN_TOKEN",
     "CONFIGURE_COMPONENT"
   ],

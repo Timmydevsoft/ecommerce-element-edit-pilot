@@ -1,0 +1,31 @@
+{
+  "variant": "split",
+  "appearance": { "textSize": "text-5xl", "spacing": "py-24", "alignment": "text-left", "background": "bg-background", "textColor": "text-foreground", "visible": true },
+  "eyebrow": "Independent general store",
+  "headline": "Things worth keeping, priced without theatre",
+  "primaryAction": {
+    "label": "Shop everything",
+    "to": "/products"
+  },
+  "secondaryAction": {
+    "label": "Track an order",
+    "to": "/orders/lookup"
+  },
+  "assurances": [
+    {
+      "id": "payment",
+      "title": "Pay at the door",
+      "text": "Cash when it arrives. Nothing is charged online, and there is no card to enter."
+    },
+    {
+      "id": "delivery",
+      "title": "Free delivery",
+      "text": "Orders over {amount} arrive free. Below that, a flat fee shown before you confirm."
+    },
+    {
+      "id": "stock",
+      "title": "Real stock counts",
+      "text": "What you see is what is on the shelf. If it is running low, we say how low."
+    }
+  ]
+}

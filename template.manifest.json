@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "templateSource": "ecommerce",
-  "templateVersion": "1.0.0",
+  "templateVersion": "1.1.0",
   "framework": "vite-react-express-monorepo",
   "pageManifestDirectory": "page-manifests",
   "runtime": {
@@ -18,6 +18,7 @@
     "build": "npm run build",
     "start": "npm run start",
     "healthPath": "/api/health"
+    ,"annotationBridge": "client/src/lib/annotation-bridge.ts"
   },
   "database": {
     "required": true,
@@ -231,68 +232,6 @@
       ]
     },
     {
-      "id": "home.copy",
-      "kind": "CONFIG",
-      "label": "Landing page wording",
-      "page": "/",
-      "sourcePath": "client/src/config/site-content.json",
-      "operations": [
-        "UPDATE_CONTENT"
-      ],
-      "fields": [
-        {
-          "path": "home.eyebrow",
-          "label": "Eyebrow line",
-          "type": "text"
-        },
-        {
-          "path": "home.headline",
-          "label": "Headline",
-          "type": "text"
-        },
-        {
-          "path": "home.primaryAction",
-          "label": "Primary button",
-          "type": "text"
-        },
-        {
-          "path": "home.secondaryAction",
-          "label": "Secondary button",
-          "type": "text"
-        },
-        {
-          "path": "home.assurances",
-          "label": "Reassurance points",
-          "type": "json"
-        },
-        {
-          "path": "home.categoriesHeading",
-          "label": "Departments heading",
-          "type": "text"
-        },
-        {
-          "path": "home.categoriesLead",
-          "label": "Departments lead",
-          "type": "text"
-        },
-        {
-          "path": "home.featuredHeading",
-          "label": "Featured heading",
-          "type": "text"
-        },
-        {
-          "path": "home.featuredLead",
-          "label": "Featured lead",
-          "type": "text"
-        },
-        {
-          "path": "home.featuredAction",
-          "label": "Featured link",
-          "type": "text"
-        }
-      ]
-    },
-    {
       "id": "theme.tokens",
       "kind": "DESIGN",
       "label": "Theme tokens",
@@ -315,18 +254,103 @@
     },
     {
       "id": "homepage.hero",
-      "kind": "COMPONENT",
+      "kind": "SECTION",
       "label": "Homepage hero",
       "page": "/",
       "sourcePath": "client/src/pages/HomePage.tsx",
+      "contentPath": "client/src/content/homepage-hero.json",
       "operations": [
         "UPDATE_CONTENT",
+        "REGENERATE_CONTENT",
         "UPDATE_DESIGN_TOKEN",
         "CONFIGURE_COMPONENT",
         "UPDATE_ASSET",
         "CREATE_COMPONENT_VARIANT"
       ],
-      "selector": "[data-builder-id=homepage.hero]"
+      "selector": "[data-section=\"homepage.hero\"]",
+      "directManipulation": { "textSize": { "path": "appearance.textSize" }, "spacing": { "path": "appearance.spacing" }, "alignment": { "path": "appearance.alignment" }, "background": { "path": "appearance.background" }, "textColor": { "path": "appearance.textColor" }, "visibility": { "path": "appearance.visible" } },
+      "fields": [
+        { "path": "appearance.textSize", "label": "Heading size", "type": "select", "options": ["text-3xl", "text-4xl", "text-5xl", "text-6xl"], "required": true, "generative": false },
+        { "path": "appearance.spacing", "label": "Vertical spacing", "type": "select", "options": ["py-12", "py-16", "py-20", "py-24", "py-28"], "required": true, "generative": false },
+        { "path": "appearance.alignment", "label": "Text alignment", "type": "select", "options": ["text-left", "text-center", "text-right"], "required": true, "generative": false },
+        { "path": "appearance.background", "label": "Background", "type": "select", "options": ["bg-background", "bg-card", "bg-muted", "bg-primary"], "required": true, "generative": false },
+        { "path": "appearance.textColor", "label": "Text colour", "type": "select", "options": ["text-foreground", "text-muted-foreground", "text-primary-foreground"], "required": true, "generative": false },
+        { "path": "appearance.visible", "label": "Visible", "type": "boolean", "required": true, "generative": false },
+        { "path": "eyebrow", "label": "Eyebrow", "type": "text", "maxLength": 48 },
+        { "path": "headline", "label": "Headline", "type": "text", "maxLength": 90, "required": true },
+        { "path": "primaryAction.label", "label": "Primary button", "type": "text", "maxLength": 28, "required": true },
+        { "path": "primaryAction.to", "label": "Primary link target", "type": "text", "generative": false, "required": true },
+        { "path": "secondaryAction.label", "label": "Secondary button", "type": "text", "maxLength": 28 },
+        { "path": "secondaryAction.to", "label": "Secondary link target", "type": "text", "generative": false, "required": true },
+        {
+          "path": "assurances", "label": "Reassurance points", "type": "list", "required": true, "min": 1, "max": 3,
+          "itemFields": [
+            { "path": "id", "label": "Reassurance id", "type": "text", "generative": false, "required": true },
+            { "path": "title", "label": "Reassurance title", "type": "text", "maxLength": 32, "required": true },
+            { "path": "text", "label": "Reassurance text", "type": "rich_text", "maxLength": 150, "required": true }
+          ]
+        }
+      ],
+      "variants": [
+        { "id": "split", "label": "Split showcase", "description": "Copy and assurances beside the product collage." },
+        { "id": "centered", "label": "Centred story", "description": "Centred copy with the product collage below." },
+        { "id": "editorial", "label": "Editorial", "description": "A wider story column with a compact product collage." }
+      ]
+    },
+    {
+      "id": "homepage.categories",
+      "kind": "SECTION",
+      "label": "Homepage departments",
+      "page": "/",
+      "sourcePath": "client/src/pages/HomePage.tsx",
+      "contentPath": "client/src/content/homepage-categories.json",
+      "selector": "[data-section=\"homepage.categories\"]",
+      "operations": ["UPDATE_CONTENT", "REGENERATE_CONTENT", "UPDATE_DESIGN_TOKEN", "CONFIGURE_COMPONENT"],
+      "directManipulation": { "textSize": { "path": "appearance.textSize" }, "spacing": { "path": "appearance.spacing" }, "alignment": { "path": "appearance.alignment" }, "background": { "path": "appearance.background" }, "textColor": { "path": "appearance.textColor" }, "visibility": { "path": "appearance.visible" } },
+      "fields": [
+        { "path": "appearance.textSize", "label": "Heading size", "type": "select", "options": ["text-2xl", "text-3xl", "text-4xl"], "required": true, "generative": false },
+        { "path": "appearance.spacing", "label": "Vertical spacing", "type": "select", "options": ["py-12", "py-16", "py-20", "py-24"], "required": true, "generative": false },
+        { "path": "appearance.alignment", "label": "Text alignment", "type": "select", "options": ["text-left", "text-center", "text-right"], "required": true, "generative": false },
+        { "path": "appearance.background", "label": "Background", "type": "select", "options": ["bg-background", "bg-card", "bg-muted", "bg-primary"], "required": true, "generative": false },
+        { "path": "appearance.textColor", "label": "Text colour", "type": "select", "options": ["text-foreground", "text-muted-foreground", "text-primary-foreground"], "required": true, "generative": false },
+        { "path": "appearance.visible", "label": "Visible", "type": "boolean", "required": true, "generative": false },
+        { "path": "heading", "label": "Heading", "type": "text", "maxLength": 60, "required": true },
+        { "path": "lead", "label": "Introduction", "type": "rich_text", "maxLength": 120 }
+      ],
+      "variants": [
+        { "id": "cards", "label": "Four-column cards", "description": "A broad department grid." },
+        { "id": "compact", "label": "Compact grid", "description": "A denser three-column department grid." },
+        { "id": "list", "label": "Two-column list", "description": "Larger department rows with more room for descriptions." }
+      ]
+    },
+    {
+      "id": "homepage.featured",
+      "kind": "SECTION",
+      "label": "Featured products",
+      "page": "/",
+      "sourcePath": "client/src/pages/HomePage.tsx",
+      "contentPath": "client/src/content/homepage-featured.json",
+      "selector": "[data-section=\"homepage.featured\"]",
+      "operations": ["UPDATE_CONTENT", "REGENERATE_CONTENT", "UPDATE_DESIGN_TOKEN", "CONFIGURE_COMPONENT"],
+      "directManipulation": { "textSize": { "path": "appearance.textSize" }, "spacing": { "path": "appearance.spacing" }, "alignment": { "path": "appearance.alignment" }, "background": { "path": "appearance.background" }, "textColor": { "path": "appearance.textColor" }, "visibility": { "path": "appearance.visible" } },
+      "fields": [
+        { "path": "appearance.textSize", "label": "Heading size", "type": "select", "options": ["text-2xl", "text-3xl", "text-4xl"], "required": true, "generative": false },
+        { "path": "appearance.spacing", "label": "Vertical spacing", "type": "select", "options": ["py-12", "py-16", "py-20", "py-24"], "required": true, "generative": false },
+        { "path": "appearance.alignment", "label": "Text alignment", "type": "select", "options": ["text-left", "text-center", "text-right"], "required": true, "generative": false },
+        { "path": "appearance.background", "label": "Background", "type": "select", "options": ["bg-background", "bg-card", "bg-muted", "bg-primary"], "required": true, "generative": false },
+        { "path": "appearance.textColor", "label": "Text colour", "type": "select", "options": ["text-foreground", "text-muted-foreground", "text-primary-foreground"], "required": true, "generative": false },
+        { "path": "appearance.visible", "label": "Visible", "type": "boolean", "required": true, "generative": false },
+        { "path": "heading", "label": "Heading", "type": "text", "maxLength": 60, "required": true },
+        { "path": "lead", "label": "Introduction", "type": "rich_text", "maxLength": 120 },
+        { "path": "action.label", "label": "Browse link", "type": "text", "maxLength": 28, "required": true },
+        { "path": "action.to", "label": "Browse link target", "type": "text", "generative": false, "required": true },
+        { "path": "emptyMessage", "label": "Empty-state message", "type": "text", "maxLength": 90, "required": true }
+      ],
+      "variants": [
+        { "id": "grid", "label": "Product grid", "description": "Four products across on large screens." },
+        { "id": "spotlight", "label": "Product spotlight", "description": "A roomier three-column presentation." },
+        { "id": "list", "label": "Product list", "description": "Two generous product columns." }
+      ]
     },
     {
       "id": "homepage.featured-card",
