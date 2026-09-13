@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "templateSource": "ecommerce",
-  "templateVersion": "1.1.0",
+  "templateVersion": "1.1.1",
   "framework": "vite-react-express-monorepo",
   "pageManifestDirectory": "page-manifests",
   "runtime": {
@@ -292,9 +292,10 @@
         }
       ],
       "variants": [
-        { "id": "split", "label": "Split showcase", "description": "Copy and assurances beside the product collage." },
-        { "id": "centered", "label": "Centred story", "description": "Centred copy with the product collage below." },
-        { "id": "editorial", "label": "Editorial", "description": "A wider story column with a compact product collage." }
+        { "id": "split", "label": "Split showcase", "description": "Copy and assurances beside the product collage. The safe default for a shop front that should show its products from the first screen." },
+        { "id": "centered", "label": "Centred story", "description": "Centred copy with the product collage below. Right when the headline is short and the store should feel calm and deliberate." },
+        { "id": "editorial", "label": "Editorial", "description": "A wider story column with a smaller product collage. Right when the words carry the store: a longer headline or a stronger point of view." },
+        { "id": "compact", "label": "Compact banner", "description": "A short full-width band with the headline and buttons on one line and the assurances as a single slim row, without the product collage. Right when the hero should take little height and let the departments and products below lead." }
       ]
     },
     {

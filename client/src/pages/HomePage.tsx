@@ -25,64 +25,102 @@ import { sectionAppearance } from "@/lib/section-appearance";
 export default function HomePage() {
   const { data: featured, loading } = useAsync(() => productsApi.featured(), []);
   const { data: categories } = useAsync(() => categoriesApi.list(), []);
+  const isCompactHero = hero.variant === "compact";
+  // The compact layout owns its short geometry. Persisted spacing and heading
+  // size describe the full-height layouts, so they must not stretch the band
+  // back out; background, colour, alignment and visibility still apply.
+  const heroAppearance = sectionAppearance(
+    isCompactHero ? { ...hero.appearance, spacing: "py-8", textSize: "text-3xl" } : hero.appearance,
+  );
   return (
     <>
-      <section data-builder-id="homepage.hero" data-section="homepage.hero" className={cn("border-b", sectionAppearance(hero.appearance).root)}>
-        <div className={cn(
-          "container grid gap-12 py-14 lg:gap-16 lg:py-24",
-          hero.variant === "centered" ? "text-center" : "lg:grid-cols-12",
-        )}>
-          <div className={cn(
-            "lg:self-center",
-            hero.variant === "centered" ? "mx-auto max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-7" : "lg:col-span-6",
-          )}>
-            <p className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
-              {hero.eyebrow}
-            </p>
+      <section data-builder-id="homepage.hero" data-section="homepage.hero" className={cn("border-b", heroAppearance.root)}>
+        {isCompactHero ? (
+          <div className="container">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+              <div className="max-w-2xl">
+                <p className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
+                  {hero.eyebrow}
+                </p>
+                <h1 className={cn("mt-2 text-2xl leading-tight font-medium tracking-tight text-balance sm:text-3xl", heroAppearance.heading)}>
+                  {hero.headline}
+                </h1>
+              </div>
 
-            <h1 className={cn("mt-5 max-w-xl text-4xl leading-[1.06] font-medium tracking-tight text-balance sm:text-5xl lg:text-[3.4rem]", sectionAppearance(hero.appearance).heading)}>
-              {hero.headline}
-            </h1>
-
-            <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
-              {appConfig.description}
-            </p>
-
-            <div className={cn("mt-9 flex flex-wrap gap-3", hero.variant === "centered" && "justify-center")}>
-              <Button asChild size="lg" className="rounded-sm px-6">
-                <Link to={hero.primaryAction.to}>{hero.primaryAction.label}</Link>
-              </Button>
-              <Button asChild size="lg" variant="ghost" className="rounded-sm px-6">
-                <Link to={hero.secondaryAction.to}>{hero.secondaryAction.label}</Link>
-              </Button>
+              <div className="flex shrink-0 flex-wrap gap-3">
+                <Button asChild className="rounded-sm px-5">
+                  <Link to={hero.primaryAction.to}>{hero.primaryAction.label}</Link>
+                </Button>
+                <Button asChild variant="ghost" className="rounded-sm px-5">
+                  <Link to={hero.secondaryAction.to}>{hero.secondaryAction.label}</Link>
+                </Button>
+              </div>
             </div>
 
-            {/* Reassurance as a quiet strip rather than a row of icon cards. */}
-            <dl className="mt-12 grid gap-x-8 gap-y-5 border-t pt-8 sm:grid-cols-3">
+            {/* Titles only: the full reassurance text belongs to the taller layouts. */}
+            <ul className="text-muted-foreground mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-[13px]">
               {hero.assurances.map((item) => (
-                <div key={item.id}>
-                  <dt className="text-sm font-medium">{item.title}</dt>
-                  <dd className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
-                    {item.text.replace("{amount}", formatMoneyCompact(appConfig.freeDeliveryOver))}
-                  </dd>
-                </div>
+                <li key={item.id}>{item.title}</li>
               ))}
-            </dl>
+            </ul>
           </div>
-
+        ) : (
           <div className={cn(
-            hero.variant === "centered" ? "mx-auto w-full max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-5" : "lg:col-span-6",
+            "container grid gap-12 py-14 lg:gap-16 lg:py-24",
+            hero.variant === "centered" ? "text-center" : "lg:grid-cols-12",
           )}>
-            {loading ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <Skeleton className="mt-8 aspect-[4/5] rounded-sm sm:mt-14" />
-                <Skeleton className="aspect-square rounded-sm" />
+            <div className={cn(
+              "lg:self-center",
+              hero.variant === "centered" ? "mx-auto max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-7" : "lg:col-span-6",
+            )}>
+              <p className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
+                {hero.eyebrow}
+              </p>
+  
+              <h1 className={cn("mt-5 max-w-xl text-4xl leading-[1.06] font-medium tracking-tight text-balance sm:text-5xl lg:text-[3.4rem]", heroAppearance.heading)}>
+                {hero.headline}
+              </h1>
+  
+              <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
+                {appConfig.description}
+              </p>
+  
+              <div className={cn("mt-9 flex flex-wrap gap-3", hero.variant === "centered" && "justify-center")}>
+                <Button asChild size="lg" className="rounded-sm px-6">
+                  <Link to={hero.primaryAction.to}>{hero.primaryAction.label}</Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost" className="rounded-sm px-6">
+                  <Link to={hero.secondaryAction.to}>{hero.secondaryAction.label}</Link>
+                </Button>
               </div>
-            ) : (
-              <HeroCollage products={featured ?? []} />
-            )}
+  
+              {/* Reassurance as a quiet strip rather than a row of icon cards. */}
+              <dl className="mt-12 grid gap-x-8 gap-y-5 border-t pt-8 sm:grid-cols-3">
+                {hero.assurances.map((item) => (
+                  <div key={item.id}>
+                    <dt className="text-sm font-medium">{item.title}</dt>
+                    <dd className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
+                      {item.text.replace("{amount}", formatMoneyCompact(appConfig.freeDeliveryOver))}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+  
+            <div className={cn(
+              hero.variant === "centered" ? "mx-auto w-full max-w-3xl" : hero.variant === "editorial" ? "lg:col-span-5" : "lg:col-span-6",
+            )}>
+              {loading ? (
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <Skeleton className="mt-8 aspect-[4/5] rounded-sm sm:mt-14" />
+                  <Skeleton className="aspect-square rounded-sm" />
+                </div>
+              ) : (
+                <HeroCollage products={featured ?? []} />
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {categories && categories.length > 0 && (
