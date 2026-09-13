@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "templateSource": "ecommerce",
-  "templateVersion": "1.1.1",
+  "templateVersion": "1.1.2",
   "framework": "vite-react-express-monorepo",
   "pageManifestDirectory": "page-manifests",
   "runtime": {
@@ -278,6 +278,7 @@
         { "path": "appearance.visible", "label": "Visible", "type": "boolean", "required": true, "generative": false },
         { "path": "eyebrow", "label": "Eyebrow", "type": "text", "maxLength": 48 },
         { "path": "headline", "label": "Headline", "type": "text", "maxLength": 90, "required": true },
+        { "path": "description", "label": "Supporting paragraph", "type": "rich_text", "maxLength": 180, "generative": true },
         { "path": "primaryAction.label", "label": "Primary button", "type": "text", "maxLength": 28, "required": true },
         { "path": "primaryAction.to", "label": "Primary link target", "type": "text", "generative": false, "required": true },
         { "path": "secondaryAction.label", "label": "Secondary button", "type": "text", "maxLength": 28 },

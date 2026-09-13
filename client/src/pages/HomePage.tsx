@@ -32,6 +32,11 @@ export default function HomePage() {
   const heroAppearance = sectionAppearance(
     isCompactHero ? { ...hero.appearance, spacing: "py-8", textSize: "text-3xl" } : hero.appearance,
   );
+  // The supporting paragraph is section content so a section rewrite can change
+  // it. Content written before 1.1.2 has no such field; typing it as optional
+  // keeps that content compiling, and the brand description stands in for it.
+  const heroCopy: { description?: string } = hero;
+  const heroDescription = heroCopy.description?.trim() || appConfig.description;
   return (
     <>
       <section data-builder-id="homepage.hero" data-section="homepage.hero" className={cn("border-b", heroAppearance.root)}>
@@ -82,7 +87,7 @@ export default function HomePage() {
               </h1>
   
               <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
-                {appConfig.description}
+                {heroDescription}
               </p>
   
               <div className={cn("mt-9 flex flex-wrap gap-3", hero.variant === "centered" && "justify-center")}>
