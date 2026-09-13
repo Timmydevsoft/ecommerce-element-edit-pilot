@@ -33,9 +33,12 @@ export default function HomePage() {
     isCompactHero ? { ...hero.appearance, spacing: "py-8", textSize: "text-3xl" } : hero.appearance,
   );
   // The supporting paragraph is section content so a section rewrite can change
-  // it. Content written before 1.1.2 has no such field; typing it as optional
-  // keeps that content compiling, and the brand description stands in for it.
-  const heroCopy: { description?: string } = hero;
+  // it. The default content leaves it out on purpose (no build step writes
+  // section content, and a fixed default would replace every project's own
+  // description), as does content written before 1.1.2. The brand description
+  // stands in until an edit writes the field. An assertion rather than an
+  // annotation: with no property in common, the annotation fails TS2559.
+  const heroCopy = hero as { description?: string };
   const heroDescription = heroCopy.description?.trim() || appConfig.description;
   return (
     <>

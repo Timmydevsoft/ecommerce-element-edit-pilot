@@ -3,7 +3,6 @@
   "appearance": { "textSize": "text-5xl", "spacing": "py-24", "alignment": "text-left", "background": "bg-background", "textColor": "text-foreground", "visible": true },
   "eyebrow": "Independent general store",
   "headline": "Things worth keeping, priced without theatre",
-  "description": "Everyday goods, honestly priced. Order online and pay cash when it arrives at your door.",
   "primaryAction": {
     "label": "Shop everything",
     "to": "/products"
